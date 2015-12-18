@@ -117,7 +117,8 @@ public class RunLogMiner {
 			System.out.println("logminer를 종료합니다.");
 			psmt.execute();
 			System.out.println("logminer 종료됨");
-
+			psmt.close();
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
