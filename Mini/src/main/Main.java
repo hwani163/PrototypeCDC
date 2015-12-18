@@ -16,6 +16,7 @@ public class Main {
 		init.addorDeleteLogFile(1);
 		init.startLogMiner();
 		ArrayList<ViewVO> list = init.excuteView();
+		init.closeLogminer();
 		
 		System.out.println(list.toString());
 		
