@@ -1,0 +1,7 @@
+{
+		"url"		:"localhost",
+		"port"		:"1521",
+		"id"		:"SYSTEM",
+		"password"	: "1234567890",
+		"sid"		: "orcl"
+}
