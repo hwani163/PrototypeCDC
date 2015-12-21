@@ -1,5 +1,6 @@
 package run;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import main.ViewVO;
-
 import util.DatabaseUtil;
 import util.LogMinerConfig;
 
@@ -16,8 +16,8 @@ public class RunLogMiner {
 	Connection con = DatabaseUtil.getConnection();
 	LogMinerConfig logminerConfig = new LogMinerConfig();
 
-	String logfileName = logminerConfig.getLogfileName();
-	String logfileDirectory = logminerConfig.getLogfileDirectory();
+	String logfileName = "";
+	String logfileDirectory = "";
 	String dictionaryFileName = logminerConfig.getDictionaryFileName();
 	String dictionaryDirectory = logminerConfig.getDictionaryDirectory();
 	String startTime = logminerConfig.getStartTime();
@@ -48,8 +48,9 @@ public class RunLogMiner {
 		PreparedStatement psmt = null;
 
 		try {
+			getLogFile();			
 			psmt = con.prepareStatement("call dbms_logmnr.add_logfile(?,?)");
-			psmt.setString(1, logfileDirectory + "/" + logfileName);
+			psmt.setString(1, logfileDirectory);
 			psmt.setInt(2, status);
 			System.out.println("로그파일 추가중");
 			psmt.executeUpdate();
@@ -61,6 +62,26 @@ public class RunLogMiner {
 			e.printStackTrace();
 			return false;
 		}
+
+	}
+
+	private void getLogFile() throws SQLException {
+		PreparedStatement psmt;
+		psmt = con.prepareStatement("select b.member " +
+				"from v$log a, v$logfile b " +
+				"where a.status = 'CURRENT' and a.group# = b.group#");
+		ResultSet rs = psmt.executeQuery();
+		String logfileName = "";
+		String logfileDirectory ="";
+		while(rs.next()){
+			logfileDirectory = rs.getString(1);
+		}
+		logfileName = new File(logfileDirectory).getName();
+		System.out.println(logfileName);
+		this.logfileDirectory = logfileDirectory;
+		this.logfileName = logfileName;
+		rs.close();
+		psmt.close();
 
 	}
 
@@ -89,14 +110,15 @@ public class RunLogMiner {
 		PreparedStatement psmt = null;
 		ArrayList<ViewVO> list = null;
 		try {
-			psmt = con.prepareStatement("select"
-					+ " SCN,seg_owner, seg_name, operation, sql_redo, sql_undo "
-					+ "from v$logmnr_contents " + "where 1=1"
-					+ "and seg_name=?" + "and seg_owner=?" +
-							"ORDER BY SCN");
+//			psmt = con.prepareStatement("select seg_owner, seg_name, operation, sql_redo, sql_undo " +
+//					"from v$logmnr_contents " +
+//					"where seg_name = ? and seg_owner = ?");
+//			psmt.setString(1, segName);
+//			psmt.setString(2, segOwner);
+			
+			psmt = con.prepareStatement("select seg_owner, seg_name, operation, sql_redo, sql_undo " +
+					"from v$logmnr_contents"+" where rownum<50 ");
 
-			psmt.setString(1, segName);
-			psmt.setString(2, segOwner);
 			ResultSet rs = psmt.executeQuery();
 
 			list = new ArrayList<ViewVO>();

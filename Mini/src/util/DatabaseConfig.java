@@ -9,7 +9,7 @@ public class DatabaseConfig {
 	public DatabaseConfig(){
 		try{
 			JSONParser parser = new JSONParser();
-			JSONObject config = (JSONObject) parser.parse(new FileReader("./config/dbconfig.json"));
+			JSONObject config = (JSONObject) parser.parse(new FileReader("./config/sourceDBconfig.json"));
 			
 			this.setUrl((String)config.get("url"));
 			this.setId((String)config.get("id"));

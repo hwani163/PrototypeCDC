@@ -9,7 +9,7 @@ public class LogMinerConfig {
 	public LogMinerConfig(){
 		try{
 			JSONParser parser = new JSONParser();
-			JSONObject config = (JSONObject) parser.parse(new FileReader("./config/logminer.json"));
+			JSONObject config = (JSONObject) parser.parse(new FileReader("./config/logminer.json"));			
 			this.setDictionaryFileName((String)config.get("dictionaryFileName"));
 			this.setDictionaryDirectory((String)config.get("dictionaryDirectory"));
 			this.setLogfileName((String)config.get("logfileName"));
