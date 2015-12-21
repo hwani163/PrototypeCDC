@@ -1,9 +1,6 @@
 package main;
 
-import java.util.ArrayList;
-
-import run.RunLogMiner;
-import run.ViewVO;
+import run.LetsView;
 
 public class Main {
 
@@ -11,15 +8,14 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RunLogMiner init = new RunLogMiner();
-		init.makeDictionaryFile();
-		init.addorDeleteLogFile(1);
-		init.startLogMiner();
-		ArrayList<ViewVO> list = init.excuteView();
-		init.closeLogminer();
 		
-		System.out.println(list.toString());
+		
+//		run();
+//		nodictionarayRun();
+		Thread thread = new Thread(new LetsView());
+		thread.start();
+		
+		
 		
 	}
-
 }
