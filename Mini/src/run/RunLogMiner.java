@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import main.ViewVO;
+
 import util.DatabaseUtil;
 import util.LogMinerConfig;
 
@@ -23,7 +25,7 @@ public class RunLogMiner {
 	String segOwner = logminerConfig.getSegOwner();
 	String segName = logminerConfig.getSegName();
 
-	public void makeDictionaryFile() {
+	public boolean makeDictionaryFile() {
 		PreparedStatement psmt = null;
 
 		try {
@@ -34,14 +36,15 @@ public class RunLogMiner {
 			psmt.executeUpdate();
 			System.out.println("dictionary file 생성완료");
 			psmt.close();
+			return true;
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
 	}
 
-	public void addorDeleteLogFile(int status) {
+	public boolean addorDeleteLogFile(int status) {
 		PreparedStatement psmt = null;
 
 		try {
@@ -52,30 +55,33 @@ public class RunLogMiner {
 			psmt.executeUpdate();
 			System.out.println("추가완료");
 			psmt.close();
+			return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 
 	}
 
-	public void startLogMiner() {
+	public boolean startLogMiner() {
 		PreparedStatement psmt = null;
 
 		try {
 			psmt = con
-					.prepareStatement("call dbms_logmnr.start_logmnr(DictFileName=>?"
-							+ ",startTime=>to_date(?,'yyyy/mm/dd hh24:mi:ss')"
-							+ ",endTime=>to_date(?,'yyyy/mm/dd hh24:mi:ss'))");
+					.prepareStatement("call dbms_logmnr.start_logmnr(DictFileName=>?)");
 			psmt.setString(1, dictionaryDirectory + "\\" + dictionaryFileName);
-			psmt.setString(2, startTime);
-			psmt.setString(3, endTime);
+//			psmt.setString(2, startTime);
+//			psmt.setString(3, endTime);
 			psmt.execute();
 			System.out.println("logminer Start!");
 			psmt.close();
+			
+			return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -84,9 +90,10 @@ public class RunLogMiner {
 		ArrayList<ViewVO> list = null;
 		try {
 			psmt = con.prepareStatement("select"
-					+ " seg_owner, seg_name, operation, sql_redo, sql_undo "
+					+ " SCN,seg_owner, seg_name, operation, sql_redo, sql_undo "
 					+ "from v$logmnr_contents " + "where 1=1"
-					+ "and seg_name=?" + "and seg_owner=?");
+					+ "and seg_name=?" + "and seg_owner=?" +
+							"ORDER BY SCN");
 
 			psmt.setString(1, segName);
 			psmt.setString(2, segOwner);
@@ -102,6 +109,8 @@ public class RunLogMiner {
 				view.setSql_undo(rs.getString(5));
 				list.add(view);
 			}
+			
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,7 +119,7 @@ public class RunLogMiner {
 
 	}
 
-	public void closeLogminer() {
+	public boolean closeLogminer() {
 		PreparedStatement psmt = null;
 		try {
 			psmt = con.prepareStatement("call dbms_logmnr.end_logmnr()");
@@ -119,8 +128,11 @@ public class RunLogMiner {
 			System.out.println("logminer 종료됨");
 			psmt.close();
 			con.close();
+			System.out.println("connection을 종료합니다.");
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
