@@ -1,10 +1,10 @@
 {
 		"dictionaryFileName"		:"dictionary.ora",
 		"dictionaryDirectory"		:"d:\11g\logs",
-		"logfileName"				:"REDO02.LOG",
+		"logfileName"				:"REDO01.LOG",
 		"logfileDirectory"			: "D:\11g\oradata\orcl",
 		"startTime" 				: "2015/12/17 13:00:00",
 		"endTime"					: "2015/12/17 16:00:00",
-		"segOwner"					: "SCOTT",
-		"segName"					: "EMP"
+		"segOwner"					: "SYS",
+		"segName"					: "UNDO$"
 }
