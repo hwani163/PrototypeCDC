@@ -1,8 +1,8 @@
 {
 		"dictionaryFileName"		:"dictionary.ora",
 		"dictionaryDirectory"		:"d:\11g\logs",
-		"logfileName"				:"REDO01.LOG",
-		"logfileDirectory"			: "D:\11g\oradata\orcl",
+		"logfileName"				:"ARC0000000010_0899040805.0001",
+		"logfileDirectory"			: "D:\11g\archive",
 		"startTime" 				: "2015/12/17 13:00:00",
 		"endTime"					: "2015/12/17 16:00:00",
 		"segOwner"					: "SYS",

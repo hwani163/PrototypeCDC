@@ -18,8 +18,8 @@ public class LogMinerConfig {
 			this.setEndTime((String)config.get("endTime"));
 			this.setSegOwner((String)config.get("segOwner"));
 			this.setSegName((String)config.get("segName"));			
-			System.out.println("Logminer Configuating value Setting conplete!");
-			System.out.println(toString());
+//			System.out.println("Logminer Configuating value Setting conplete!");
+//			System.out.println(toString());
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -1,6 +1,8 @@
 package main;
 
-import run.LetsView;
+import run.RunLogMiner;
+import util.WatchingPaths;
+
 
 public class Main {
 
@@ -10,12 +12,15 @@ public class Main {
 	public static void main(String[] args) {
 		
 		
-//		run();
-//		nodictionarayRun();
-		Thread thread = new Thread(new LetsView());
-		thread.start();
-		
-		
+		run();
+		RunLogMiner a = new RunLogMiner();
+//		a.makeDictionaryFile();
+		a.closeLogminer();
+
+	}
+
+	private static void run() {
+		WatchingPaths.checkDirectory();
 		
 	}
 }

@@ -1,6 +1,5 @@
 package run;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,8 +15,8 @@ public class RunLogMiner {
 	Connection con = DatabaseUtil.getConnection();
 	LogMinerConfig logminerConfig = new LogMinerConfig();
 
-	String logfileName = "";
-	String logfileDirectory = "";
+	String logfileName = logminerConfig.getLogfileName();
+	String logfileDirectory = logminerConfig.getLogfileDirectory();
 	String dictionaryFileName = logminerConfig.getDictionaryFileName();
 	String dictionaryDirectory = logminerConfig.getDictionaryDirectory();
 	String startTime = logminerConfig.getStartTime();
@@ -44,13 +43,12 @@ public class RunLogMiner {
 		}
 	}
 
-	public boolean addorDeleteLogFile(int status) {
+	public boolean addorDeleteLogFile(String archiveFile,int status) {
 		PreparedStatement psmt = null;
 
 		try {
-			getLogFile();			
 			psmt = con.prepareStatement("call dbms_logmnr.add_logfile(?,?)");
-			psmt.setString(1, logfileDirectory);
+			psmt.setString(1, logfileDirectory+"\\"+archiveFile);
 			psmt.setInt(2, status);
 			System.out.println("로그파일 추가중");
 			psmt.executeUpdate();
@@ -65,25 +63,6 @@ public class RunLogMiner {
 
 	}
 
-	private void getLogFile() throws SQLException {
-		PreparedStatement psmt;
-		psmt = con.prepareStatement("select b.member " +
-				"from v$log a, v$logfile b " +
-				"where a.status = 'CURRENT' and a.group# = b.group#");
-		ResultSet rs = psmt.executeQuery();
-		String logfileName = "";
-		String logfileDirectory ="";
-		while(rs.next()){
-			logfileDirectory = rs.getString(1);
-		}
-		logfileName = new File(logfileDirectory).getName();
-		System.out.println(logfileName);
-		this.logfileDirectory = logfileDirectory;
-		this.logfileName = logfileName;
-		rs.close();
-		psmt.close();
-
-	}
 
 	public boolean startLogMiner() {
 		PreparedStatement psmt = null;
@@ -109,6 +88,7 @@ public class RunLogMiner {
 	public ArrayList<ViewVO> excuteView() {
 		PreparedStatement psmt = null;
 		ArrayList<ViewVO> list = null;
+		System.out.println("excuteView()");
 		try {
 //			psmt = con.prepareStatement("select seg_owner, seg_name, operation, sql_redo, sql_undo " +
 //					"from v$logmnr_contents " +
@@ -116,9 +96,9 @@ public class RunLogMiner {
 //			psmt.setString(1, segName);
 //			psmt.setString(2, segOwner);
 			
-			psmt = con.prepareStatement("select seg_owner, seg_name, operation, sql_redo, sql_undo " +
-					"from v$logmnr_contents"+" where rownum<50 ");
-
+			psmt = con.prepareStatement("select seg_owner, seg_name, sql_redo, sql_undo " +
+					"from v$logmnr_contents where seg_owner is not null");
+//			+" where seg_owner='SCOTT' "
 			ResultSet rs = psmt.executeQuery();
 
 			list = new ArrayList<ViewVO>();
@@ -126,9 +106,9 @@ public class RunLogMiner {
 				ViewVO view = new ViewVO();
 				view.setSeg_owner(rs.getString(1));
 				view.setSeg_name(rs.getString(2));
-				view.setOperation(rs.getString(3));
-				view.setSql_redo(rs.getString(4));
-				view.setSql_undo(rs.getString(5));
+//				view.setOperation(rs.getString(3));
+				view.setSql_redo(rs.getString(3));
+				view.setSql_undo(rs.getString(4));
 				list.add(view);
 			}
 			
