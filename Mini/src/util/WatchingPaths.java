@@ -10,6 +10,7 @@ import java.nio.file.WatchService;
 import java.util.List;
 
 import run.LetsView;
+import vo.LogMinerConfig;
 
 public class WatchingPaths {
 

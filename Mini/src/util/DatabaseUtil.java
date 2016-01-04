@@ -3,6 +3,8 @@ package util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import vo.DatabaseConfig;
+
 
 public class DatabaseUtil {
 	

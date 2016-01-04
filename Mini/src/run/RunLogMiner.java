@@ -1,13 +1,14 @@
 package run;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import util.DatabaseUtil;
-import util.LogMinerConfig;
+import vo.LogMinerConfig;
 import vo.ViewVO;
 
 public class RunLogMiner {
@@ -19,8 +20,8 @@ public class RunLogMiner {
 	String logfileDirectory = logminerConfig.getLogfileDirectory();
 	String dictionaryFileName = logminerConfig.getDictionaryFileName();
 	String dictionaryDirectory = logminerConfig.getDictionaryDirectory();
-	String startTime = logminerConfig.getStartTime();
-	String endTime = logminerConfig.getEndTime();
+	Date startTime = logminerConfig.getStartTime();
+	Date endTime = logminerConfig.getEndTime();
 	String segOwner = logminerConfig.getSegOwner();
 	String segName = logminerConfig.getSegName();
 
@@ -92,8 +93,13 @@ public class RunLogMiner {
 		try {
 			
 			psmt = con.prepareStatement("select seg_owner, seg_name, sql_redo, sql_undo " +
-					"from v$logmnr_contents where seg_owner=?");
+					"from v$logmnr_contents where seg_owner=? and TIMESTAMP BETWEEN ? and ?");
 			psmt.setString(1, segOwner);
+			psmt.setDate(2, startTime);
+			psmt.setDate(3, endTime);
+			System.out.println(startTime);
+			System.out.println(endTime);
+			
 			ResultSet rs = psmt.executeQuery();
 
 			list = new ArrayList<ViewVO>();

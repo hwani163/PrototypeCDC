@@ -1,6 +1,8 @@
-package util;
+package vo;
 
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
+import java.sql.Date;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,8 +16,11 @@ public class LogMinerConfig {
 			this.setDictionaryDirectory((String)config.get("dictionaryDirectory"));
 			this.setLogfileName((String)config.get("logfileName"));
 			this.setLogfileDirectory((String)config.get("logfileDirectory"));
-			this.setStartTime((String)config.get("startTime"));
-			this.setEndTime((String)config.get("endTime"));
+			
+			SimpleDateFormat ts = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			
+			this.setStartTime(new java.sql.Date(ts.parse((String)config.get("startTime")).getDate()));
+			this.setEndTime(new java.sql.Date(ts.parse((String)config.get("endTime")).getDate()));
 			this.setSegOwner((String)config.get("segOwner"));
 			this.setSegName((String)config.get("segName"));			
 //			System.out.println("Logminer Configuating value Setting conplete!");
@@ -37,8 +42,8 @@ public class LogMinerConfig {
 	String dictionaryDirectory;
 	String logfileName;
 	String logfileDirectory;
-	String startTime;
-	String endTime;
+	Date startTime;
+	Date endTime;
 	String segOwner;
 	String segName;
 	
@@ -67,16 +72,16 @@ public class LogMinerConfig {
 	public void setLogfileDirectory(String logfileDirectory) {
 		this.logfileDirectory = logfileDirectory;
 	}
-	public String getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
-	public void setStartTime(String startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
-	public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 	public String getSegOwner() {
