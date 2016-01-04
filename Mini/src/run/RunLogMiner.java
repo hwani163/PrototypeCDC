@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import main.ViewVO;
 import util.DatabaseUtil;
 import util.LogMinerConfig;
+import vo.ViewVO;
 
 public class RunLogMiner {
 

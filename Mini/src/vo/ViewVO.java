@@ -1,4 +1,4 @@
-package main;
+package vo;
 
 public class ViewVO {
 	String seg_owner;

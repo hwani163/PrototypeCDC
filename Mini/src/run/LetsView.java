@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import main.ViewVO;
+import vo.ViewVO;
+
 
 public class LetsView {
 	Queue<ViewVO> queue = new LinkedList<ViewVO>();
