@@ -2,6 +2,7 @@ package run;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -10,30 +11,30 @@ import main.ViewVO;
 public class LetsView {
 	Queue<ViewVO> queue = new LinkedList<ViewVO>();
 
-	public void letsView(String archiveFile) {
+	public void letsView(String archiveFile) throws IOException {
 		RunLogMiner init = new RunLogMiner();
 		init.addorDeleteLogFile(archiveFile, 1);
 		init.startLogMiner();
 		queue.addAll(init.excuteView());
-
-		letsShoot(this.queue);
+		System.out.println("큐의 사이즈"+queue.size());
+		BufferedWriter fw = new BufferedWriter(new FileWriter("example.txt", true));
+		
+		while (!queue.isEmpty()) {
+			System.out.println(queue.peek().toString());
+			letsShoot(queue.poll(),fw);
+		}
+		System.out.println(queue.toString());
+		fw.close();
+		
+		
 	}
 
-	public void letsShoot(Queue queue) {
+	public void letsShoot(ViewVO value,BufferedWriter fw) {
 		try {
-			System.out.println(queue.toString());
-			BufferedWriter fw =null;
-			System.out.println(queue.isEmpty());
-			while (!queue.isEmpty()) {
-				ViewVO value = (ViewVO) queue.poll();
-				 fw= new BufferedWriter(new FileWriter(
-						"example.txt", true));
-				fw.write(value.getSeg_owner() + "    " + value.getSql_redo()+"\n");
-			}
-			if (fw!=null) {
-				fw.close();				
-			}
-			System.out.println("파일쓰기 완료");
+			
+			fw.write(value.getSeg_owner() + "    " + value.getSql_redo() + "\n");
+			System.out.println(value.getSeg_owner());
+
 
 		} catch (Exception e) {
 			e.printStackTrace();

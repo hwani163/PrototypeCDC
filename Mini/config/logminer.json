@@ -5,6 +5,5 @@
 		"logfileDirectory"			: "D:\11g\archive",
 		"startTime" 				: "2015/12/17 13:00:00",
 		"endTime"					: "2015/12/17 16:00:00",
-		"segOwner"					: "SYS",
-		"segName"					: "UNDO$"
+		"segOwner"					: "SCOTT"
 }

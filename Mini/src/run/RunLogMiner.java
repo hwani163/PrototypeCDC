@@ -90,15 +90,10 @@ public class RunLogMiner {
 		ArrayList<ViewVO> list = null;
 		System.out.println("excuteView()");
 		try {
-//			psmt = con.prepareStatement("select seg_owner, seg_name, operation, sql_redo, sql_undo " +
-//					"from v$logmnr_contents " +
-//					"where seg_name = ? and seg_owner = ?");
-//			psmt.setString(1, segName);
-//			psmt.setString(2, segOwner);
 			
 			psmt = con.prepareStatement("select seg_owner, seg_name, sql_redo, sql_undo " +
-					"from v$logmnr_contents where seg_owner is not null");
-//			+" where seg_owner='SCOTT' "
+					"from v$logmnr_contents where seg_owner=?");
+			psmt.setString(1, segOwner);
 			ResultSet rs = psmt.executeQuery();
 
 			list = new ArrayList<ViewVO>();
